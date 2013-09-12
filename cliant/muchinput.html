@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]> ><! <![endif]-->
+<html class="no-js">
+  <!-- <![endif] -->
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <title></title>
+    <meta content="" name="description">
+    <meta content="width=device-width" name="viewport">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      /*<![CDATA[*/
+        body {
+          padding-top: 60px;
+          padding-bottom: 40px;
+        }
+        .table th, .table td {
+          text-align: center;
+        }
+        select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {margin-bottom: 0;}
+        .form-actions {text-align: center;}
+      /*]]>*/
+    </style>
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+<script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+
+   <script src="js/main.js"></script>
+<!--
+   <script src="js/bootstrap.min.js"></script>
+-->
+   <script>
+
+  var gameId;
+  var chenge_member_count = 0;
+  var point_info_count = 0;
+  var game_alert_count = 0;
+  var isSelect = function(obj,value){if(obj==value){return "selected"};};
+  var isEmpty = function(value){if(void 0===value||"undefined"==value){return "";}else{return value;}};
+
+  function createRow(name,count,obj1,obj2,obj3,obj4){
+
+    str =
+    "<tr>"+
+    "<td>"+
+    "<div class='controls'>"+
+    "<select class='span2' name='"+name+"_1_"+count+"'>"+
+    "<option></option>"+
+    "<option value='1' "+isSelect(obj1,1)+">準備</option>"+
+    "<option value='2' "+isSelect(obj1,2)+">リハーサル</option>"+
+    "<option value='3' "+isSelect(obj1,3)+">本番前半</option>"+
+    "<option value='4' "+isSelect(obj1,4)+">本番後半</option>"+
+    "</select>"+
+    "</div>"+
+    "</td>"+
+    "<td class='span1'>"+
+    "<input class='input-block-level' type='text' id='"+name+"_2_"+count+"' value='"+obj2+"'>"+
+    "</td>"+
+    "<td>"+
+      obj3+
+    "</td>"+
+    "<td>"+
+      obj4+
+    "</td>"+
+    "</tr>"
+
+    return str;
+  }
+
+  $(function(){
+
+    //Set URL Parameter
+    gameId = decodeURI(location.search.substring(1).split('&')[0].split('=')[1]);
+    var home_name = decodeURI(location.search.substring(1).split('&')[4].split('=')[1]);
+    var away_name = decodeURI(location.search.substring(1).split('&')[5].split('=')[1]);
+
+    $("#home_name_label1").html(home_name);
+    $("#home_name_label2").html(home_name);
+    $("#home_name_label3").html(home_name);
+    $("#home_name_label4").html(home_name);
+    $("#away_name_label1").html(away_name);
+    $("#away_name_label2").html(away_name);
+    $("#away_name_label3").html(away_name);
+    $("#away_name_label4").html(away_name);
+
+    //Get Starting Member info
+    $.ajax({
+        type:'GET',
+        url:getHost(),
+        data:{
+            api:"002",
+            id:gameId
+        },
+        datatype:"json",
+        success:function(data){
+           var id = data[0].id;
+           var point = data[0].point[0].split(",");
+           var game_history = data[0].game_history;
+           var status = data[0].status;
+           var etc = data[0].etc;
+           var chenge_member = data[0].chenge_member;
+           var point_info = data[0].point_info;
+           var game_alert = data[0].game_alert;
+
+           $("#point1").val(point[0]);
+           $("#point2").val(point[1]);
+           $("#point3").val(point[2]);
+           $("#point4").val(point[3]);
+           $("#point5").val(point[4]);
+           $("#point6").val(point[5]);
+           $("#point7").val(point[6]);
+           $("#point8").val(point[7]);
+           $("#point9").val(point[8]);
+           $("#point10").val(point[9]);
+           $("#point11").val(point[10]);
+           $("#point12").val(point[11]);
+
+           $("[name=status]").val(status);
+           $("#etc").val(etc);
+           $("#game_history").val(game_history);
+
+           if(null!=chenge_member){
+             var str1;
+             var str2;
+
+             for (var i=0; i< chenge_member.length; i++) {
+
+                var array = chenge_member[i].split(",");
+
+                // Create HTML
+                var obj1 = "<input class='input-block-level' id='chenge_member_home_3_"+i+"' type='text' value='"+isEmpty(array[2])+"'>";
+                var obj2 = "<input class='input-block-level' id='chenge_member_home_4_"+i+"' type='text' value='"+isEmpty(array[3])+"'>";
+                str1 = createRow("chenge_member_home",i,isEmpty(array[0]),isEmpty(array[1]),isEmpty(obj1),isEmpty(obj2));
+
+                obj1 = "<input class='input-block-level' id='chenge_member_away_3_"+i+"' type='text' value='"+isEmpty(array[6])+"'>";
+                obj2 = "<input class='input-block-level' id='chenge_member_away_4_"+i+"'type='text' value='"+isEmpty(array[7])+"'>";
+                str2 = createRow("chenge_member_away",i,isEmpty(array[4]),isEmpty(array[5]),isEmpty(obj1),isEmpty(obj2));
+
+                $("#chenge_member_list_home").append(str1);
+                $("#chenge_member_list_away").append(str2);
+
+                chenge_member_count++;
+              }
+            }
+
+           if(null!=point_info){
+             var str1;
+             var str2;
+
+             for (var i=0; i< point_info.length; i++) {
+
+                var array = point_info[i].split(",");
+
+                // Create HTML
+                var obj1 = "<input class='input-block-level' id='point_info_home_3_"+i+"' type='text' value='"+isEmpty(array[2])+"'>";
+                var obj2 = "<select class='span2' name='point_info_home_4_"+i+"'>"+
+                "<option></option>"+
+                "<option value='1' "+isSelect(array[3],1)+">質問</option>"+
+                "<option value='2' "+isSelect(array[3],2)+">意見</option>"+
+                "</select>";
+                str1 = createRow("point_info_home",i,isEmpty(array[0]),isEmpty(array[1]),obj1,obj2);
+
+                obj1 = "<input class='input-block-level' type='text' id='point_info_away_3_"+i+"' value='"+isEmpty(array[6])+"'>";
+                obj2 = "<select class='span2' name='point_info_away_4"+i+"'>"+
+                "<option></option>"+
+                "<option value='1' "+isSelect(array[7],1)+">質問</option>"+
+                "<option value='2' "+isSelect(array[7],2)+">意見</option>"+
+                "</select>";
+
+                str2 = createRow("point_info_away",i,isEmpty(array[4]),isEmpty(array[5]),obj1,obj2);
+
+                $("#point_info_list_home").append(str1);
+                $("#point_info_list_away").append(str2);
+
+                point_info_count++;
+              }
+            }
+
+           if(null!=game_alert){
+             var str1;
+             var str2;
+
+             for (var i=0; i< game_alert.length; i++) {
+
+                var array = game_alert[i].split(",");
+
+                // Create HTML
+                var obj1 = "<input class='input-block-level' id='game_alert_home_3_"+i+"' type='text' value='"+isEmpty(array[2])+"'>";
+                var obj2 = "<select class='span2' name='game_alert_home_4_"+i+"'>"+
+                "<option></option>"+
+                "<option value='1' "+isSelect(array[2],1)+">警告</option>"+
+                "<option value='2' "+isSelect(array[2],2)+">違反</option>"+
+                "</select>";
+                str1 = createRow("game_alert_home",i,isEmpty(array[0]),isEmpty(array[1]),obj1,obj2);
+
+                obj1 = "<input class='input-block-level' type='text' id='game_alert_away_4_"+i+"' value='"+isEmpty(array[6])+"'>";
+                obj2 = "<select class='span2' name='game_alert_away_4_"+i+"'>"+
+                "<option></option>"+
+                "<option value='1' "+isSelect(array[6],1)+">警告</option>"+
+                "<option value='2' "+isSelect(array[6],2)+">違反</option>"+
+                "</select>";
+                str2 = createRow("game_alert_away",i,isEmpty(array[4]),isEmpty(array[5]),obj1,obj2);
+
+                document.getElementById("game_alert_list_home").innerHTML = str1;
+                document.getElementById("game_alert_list_away").innerHTML = str2;
+
+                game_alert_count++;
+              }
+            }
+
+        }
+    });
+
+  });
+
+  function submitAction(){
+alert("not use this function");
+    var point = new Array();
+    var etc = new Array();
+    var chenge_member = new Array();
+    var point_info = new Array();
+    var game_alert = new Array();
+
+    point.push($("#point1").val());
+    point.push($("#point2").val());
+    point.push($("#point3").val());
+    point.push($("#point4").val());
+    point.push($("#point5").val());
+    point.push($("#point6").val());
+    point.push($("#point7").val());
+    point.push($("#point8").val());
+    point.push($("#point9").val());
+    point.push($("#point10").val());
+    point.push($("#point11").val());
+    point.push($("#point12").val());
+
+    var game_history = $("#game_history").html();
+    var status = $("[name=status]").val();
+    var etc = $("#etc").html();
+
+    for(var i = 0; i < chenge_member_count; i++){
+        change_member.push(
+            $("#home_period"+i).val(),
+            $("#home_time"+i).val(),
+            $("#home_name"+i).val(),
+            $("#home_chenge_name"+i).val(),
+            $("#away_period"+i).val(),
+            $("#away_time"+i).val(),
+            $("#away_name"+i).val(),
+            $("#away_chenge_name"+i).val()
+        );
+    }
+
+    for(var i = 0; i < point_info_count; i++){
+      point_info.push(
+          $("#home_period"+i).val(),
+          $("#home_time"+i).val(),
+          $("#home_name"+i).val(),
+          $("#home_chenge_name"+i).val(),
+          $("#away_period"+i).val(),
+          $("#away_time"+i).val(),
+          $("#away_name"+i).val(),
+          $("#away_chenge_name"+i).val()
+      );
+    }
+
+    for(var i = 0; i < game_alert_count; i++){
+      game_alert.push(
+          $("#home_period"+i).val(),
+          $("#home_time"+i).val(),
+          $("#home_name"+i).val(),
+          $("#home_chenge_name"+i).val(),
+          $("#away_period"+i).val(),
+          $("#away_time"+i).val(),
+          $("#away_name"+i).val(),
+          $("#away_chenge_name"+i).val()
+      );
+    }
+
+    $.ajax({
+      url:getHost(),
+    dataType:"json",
+    data:{
+	  "api": "002",
+	  "id": gameId,
+      "point":point,
+      "game_history":game_history,
+      "status":status,
+      "etc":etc,
+      "chenge_member":chenge_member,
+      "point_info":point_info,
+      "game_alert":game_alert
+    },
+    type:"POST",
+    success:function(data){
+    },
+    error:function(data){
+      if(200==data.status){
+        alert("データ登録が完了しました");
+      }else{
+        alert("データ登録が失敗しました");
+      }
+    }
+  });
+
+  }
+
+  function addAction1(){
+
+      var count = chenge_member_count;
+
+      var obj1 = "<input class='input-block-level' id='chenge_member_home_3_"+count+"' type='text'>";
+      var obj2 = "<input class='input-block-level' id='chenge_member_home_4_"+count+"' type='text'>";
+      var str1 = createRow("chenge_member_home",count,"","",obj1,obj2);
+
+      obj1 = "<input class='input-block-level' id='chenge_member_away_3_"+count+"' type='text'>";
+      obj2 = "<input class='input-block-level' id='chenge_member_away_4_"+count+"' type='text'>";
+      var str2 = createRow("chenge_member_away",count,"","",obj1,obj2);
+
+      $("#chenge_member_list_home").append(str1);
+      $("#chenge_member_list_away").append(str2);
+
+      chenge_member_count++;
+  }
+
+  function addAction2(){
+
+      var count = point_info_count;
+
+      var obj1 = "<input class='input-block-level' id='point_info_home_3_"+count+"' type='text' value=''>";
+      var obj2 = "<select class='span2' name='point_info_home_4_"+count+"'>"+
+                "<option></option>"+
+                "<option value='1'>質問</option>"+
+                "<option value='2'>意見</option>"+
+                "</select>";
+      var str1 = createRow("point_info_home",count,"","",obj1,obj2);
+
+      obj1 = "<input class='input-block-level' id='point_info_away_3_"+count+"' type='text' value=''>";
+      obj2 = "<select class='span2' name='point_info_away_4_"+count+"'>"+
+                "<option></option>"+
+                "<option value='1'>質問</option>"+
+                "<option value='2'>意見</option>"+
+                "</select>";
+      var str2 = createRow("point_info_away",count,"","",obj1,obj2);
+
+      $("#point_info_list_home").append(str1);
+      $("#point_info_list_away").append(str2);
+
+      point_info_count++;
+  }
+
+  function addAction3(){
+
+      var count = game_alert_count;
+
+      var obj1 = "<input class='input-block-level' id='game_alert_home_3_"+count+"' type='text' value=''>";
+      var obj2 = "<select class='span2' name='game_alert_home_4_"+count+"'>"+
+                "<option></option>"+
+                "<option value='1' >警告</option>"+
+                "<option value='2' >違反</option>"+
+                "</select>";
+      var str1 = createRow("game_alert_home",count,"","",obj1,obj2);
+
+      obj1 = "<input class='input-block-level' id='game_alert_away_3_"+count+"' type='text' value=''>";
+      obj2 = "<select class='span2' name='game_alert_away_4_"+count+"'>"+
+                "<option></option>"+
+                "<option value='1' >警告</option>"+
+                "<option value='2' >違反</option>"+
+                "</select>";
+      var str2 = createRow("game_alert_away",count,"","",obj1,obj2);
+
+      $("#game_alert_list_home").append(str1);
+      $("#game_alert_list_away").append(str2);
+
+      game_alert_count++;
+  }
+
+
+  function removeObject(thisId){
+      $(thisId).remove();
+  }
+
+  function submitAction(){
+      var point = $("#point1").val()+","
+                + $("#point2").val()+","
+                + $("#point3").val()+","
+                + $("#point4").val()+","
+                + $("#point5").val()+","
+                + $("#point6").val()+","
+                + $("#point7").val()+","
+                + $("#point8").val()+","
+                + $("#point9").val()+","
+                + $("#point10").val()+","
+                + $("#point11").val()+","
+                + $("#point12").val();
+
+      var status = $("[name=status]").val();
+      var game_history = $("#game_history").val();
+      var etc = $("#etc").val();
+      var chenge_member = new Array();
+      var point_info = new Array();
+      var game_alert = new Array();
+
+      for(var i = 0; i<chenge_member_count; i++){
+          if((""==$("#chenge_member_home_2_"+i).val())&&
+             (""==$("#chenge_member_home_3_"+i).val())&&
+             (""==$("#chenge_member_home_4_"+i).val())&&
+             (""==$("#chenge_member_away_2_"+i).val())&&
+             (""==$("#chenge_member_away_3_"+i).val())&&
+             (""==$("#chenge_member_away_4_"+i).val())){
+             alert("分、社員名が入力されていない行は削除されます");
+          }else{
+            var str = $("[name=chenge_member_home_1_"+i+"]").val()
+                  + "," + $("#chenge_member_home_2_"+i).val()
+                  + "," + $("#chenge_member_home_3_"+i).val()
+                  + "," + $("#chenge_member_home_4_"+i).val()
+                  + "," + $("[name=chenge_member_away_1_"+i+"]").val()
+                  + "," + $("#chenge_member_away_2_"+i).val()
+                  + "," + $("#chenge_member_away_3_"+i).val()
+                  + "," + $("#chenge_member_away_4_"+i).val()
+            chenge_member.push(str);
+          }
+      }
+      for(var i = 0; i<point_info_count; i++){
+          if((""==$("#point_info_home_2_"+i).val())&&
+             (""==$("#point_info_home_3_"+i).val())&&
+             (""==$("#point_info_away_2_"+i).val())&&
+             (""==$("#point_info_away_3_"+i).val())){
+             alert("分、社員名が入力されていない行は削除されます");
+          }else{
+            var str = $("[name=point_info_home_1_"+i+"]").val()
+                  + "," + $("#point_info_home_2_"+i).val()
+                  + "," + $("#point_info_home_3_"+i).val()
+                  + "," + $("[name=point_info_home_4_"+i+"]").val()
+                  + "," + $("[name=point_info_away_1_"+i+"]").val()
+                  + "," + $("#point_info_away_2_"+i).val()
+                  + "," + $("#point_info_away_3_"+i).val()
+                  + "," + $("[name=point_info_away_4_"+i+"]").val()
+            point_info.push(str);
+         }
+      }
+      for(var i = 0; i<game_alert_count; i++){
+
+          if((""==$("#game_alert_home_2_"+i).val())&&
+             (""==$("#game_alert_home_3_"+i).val())&&
+             (""==$("#game_alert_away_2_"+i).val())&&
+             (""==$("#game_alert_away_3_"+i).val())){
+             alert("分、社員名が入力されていない行は削除されます");
+          }else{
+            var str = $("[name=game_alert_home_1_"+i+"]").val()
+                  + "," + $("#game_alert_home_2_"+i).val()
+                  + "," + $("#game_alert_home_3_"+i).val()
+                  + "," + $("[name=game_alert_home_4_"+i+"]").val()
+                  + "," + $("[name=game_alert_away_1_"+i+"]").val()
+                  + "," + $("#game_alert_away_2_"+i).val()
+                  + "," + $("#game_alert_away_3_"+i).val()
+                  + "," + $("[name=game_alert_away_4_"+i+"]").val()
+            game_alert.push(str);
+          }
+      }
+
+      $.ajax({
+          url:getHost(),
+          dataType:"json",
+          data:{
+              "api": "002",
+              "id": gameId,
+              "point":point,
+              "status":status,
+              "etc":etc,
+              "game_history":game_history,
+              "chenge_member":chenge_member,
+              "point_info":point_info,
+              "game_alert":game_alert
+          },
+          type:"POST",
+          success:function(data){
+          },
+          error:function(data){
+            if(200==data.status){
+            alert("データ登録が完了しました");
+          }else{
+            alert("データ登録が失敗しました");
+          }
+    }
+      });
+
+  }
+
+</script>
+  </head>
+  <body>
+    <!--[if lt IE 7]>
+      <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+    <![endif]-->
+    <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+
+        <div class="container">
+          <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">勉強会</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active">
+                <a href="index.html">一覧</a>
+              </li>
+
+              <li class="dropdown">
+                <a  href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  日程入力
+                  <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="schedule.html">スケジュール</a>
+                  </li>
+                  <li>
+                    <a href="reserve.html">会社名簿</a>
+                  </li>
+                </ul>
+              </li>
+
+            </ul>
+          </div>
+          <!-- /.nav-collapse -->
+        </div>
+
+        <!-- container -->
+      </div>
+      <!-- navbar-inner -->
+    </div>
+    <!-- navbar navbar-inverse navbar-fixed-to -->
+    <div class="container">
+      <h2>勉強会情報入力</h2>
+      <form>
+        <!-- Score Status Development -->
+        <div class="row-fluid">
+          <div class="span4">
+
+            <h3>意見入力</h3>
+            <table class="table table-striped table-bordered table-condensed">
+              <tr>
+                <th class="span2">会社名</th>
+                <th id="home_name_label1">日本システム</th>
+                <th>-</th>
+                <th id="away_name_label1">東京システム</th>
+              </tr>
+              <tr>
+                <th class="span2">準備</th>
+                <td class="span2">
+                  <input class="input-block-level" type="text" value="" id="point1">
+                </td>
+                <td>-</td>
+                <td class="span2">
+                  <input class="input-block-level" type="text" value="" id="point2">
+                </td>
+              </tr>
+              <tr>
+                <th class="span2">リハーサル</th>
+                <td class="span2">
+                  <input class="input-block-level" type="text" value="" id="point3">
+                </td>
+                <td>-</td>
+                <td class="span2">
+                  <input class="input-block-level" type="text" value="" id="point4">
+                </td>
+              </tr>
+              <tr>
+                <th class="span2">本番前半</th>
+                <td class="span2">
+                  <input class="input-block-level" type="text" value="" id="point5">
+                </td>
+                <td>-</td>
+                <td class="span2">
+                  <input class="input-block-level" type="text" value="" id="point6">
+                </td>
+              </tr>
+              <tr>
+                <th class="span2">本番後半</th>
+                <td class="span2">
+                  <input class="input-block-level" type="text" value="" id="point7">
+                </td>
+                <td>-</td>
+                <td class="span2">
+                  <input class="input-block-level" type="text" value="" id="point8">
+                </td>
+              </tr>
+              <tr>
+                <th class="span2">合計</th>
+                <td class="span2">
+                  <input class="input-block-level" type="text" value="" id="point9">
+                </td>
+                <td>-</td>
+                <td class="span2">
+                  <input class="input-block-level" type="text" value="" id="point10">
+                </td>
+              </tr>
+              <tr>
+                <th class="span2">反省会</th>
+                <td class="span2">
+                  <input class="input-block-level" type="text" value="" id="point11">
+                </td>
+                <td>-</td>
+                <td class="span2">
+                  <input class="input-block-level" type="text" value="" id="point12">
+                </td>
+              </tr>
+            </table>
+            <div class="control-group">
+              <label class="control-label">
+              <h4>ステータス</h4>
+              <select id="試合開始前" name="status">
+                <option value="1">実行計画中</option>
+                <option value="2">参加者入力済</option>
+                <option value="3">リハーサル開始</option>
+                <option value="4">リハーサル終了</option>
+                <option value="5">本番準備</option>
+                <option value="6">本番準備完了</option>
+                <option value="7">本番開始</option>
+                <option value="8">本番中</option>
+                <option value="9">本番終了</option>
+                <option value="10">本番終了後</option>
+                <option value="11">反省会</option>
+                <option value="12">反省会終了</option>
+                <option value="13">中止</option>
+              </select>
+            </div>
+            <div class="control-group">
+              <label class="control-label" for="textarea">
+              <h4>備考</h4>
+              <div class="controls">
+                <textarea class="input-xlarge" id="etc" rows="3"></textarea>
+              </div>
+            </div>
+          </div>
+          <!-- span4 -->
+          <div class="control-group span8">
+            <label>
+            <h3>勉強会経過</h3>
+            <div class="controls">
+              <textarea class="span12" rows="22" id="game_history"></textarea>
+            </div>
+          </div>
+          <!-- control-group span8 -->
+        </div>
+        <!-- row-fluid -->
+        <div class="form-actions">
+          <button class="btn btn-large btn-primary" type="button" onclick="submitAction()">登録する</button>
+        </div>
+        <!-- Member Change -->
+        <h2>意見交換</h2>
+        <div class="row">
+          <div class="span6">
+            <table class="table table-striped table-bordered table-condensed">
+              <thead>
+                <tr>
+                  <th id="home_name_label2" colspan="4">日本システム</th>
+                </tr>
+                <tr>
+                  <th rowspan="2">前半/後半</th>
+                  <th rowspan="2">分</th>
+                  <th>意見</th>
+                  <th>質問</th>
+                </tr>
+                <tr>
+                  <th>社員名</th>
+                  <th>社員名</th>
+                </tr>
+              </thead>
+              <tbody id="chenge_member_list_home">
+				<!--
+				Input HTML
+				-->
+              </tbody>
+            </table>
+          </div>
+          <!-- span6 -->
+          <div class="span6">
+ <table class="table table-striped table-bordered table-condensed">
+              <thead>
+                <tr>
+                  <th  id="away_name_label2" colspan="4">東京システム</th>
+                </tr>
+                <tr>
+                  <th rowspan="2">前半/後半</th>
+                  <th rowspan="2">分</th>
+                  <th>意見</th>
+                  <th>質問</th>
+                </tr>
+                <tr>
+                  <th>社員名</th>
+                  <th>社員名</th>
+                </tr>
+              </thead>
+              <tbody id="chenge_member_list_away">
+				<!--
+				Input HTML
+				-->
+              </tbody>
+            </table>
+          </div>
+          <!-- span6 -->
+        </div>
+        <!-- row -->
+        <div class="form-actions">
+          <button class="btn btn-large btn-primary" type="button" onclick="addAction1()">追加する</button>
+          <button class="btn btn-large btn-primary" type="button" onclick="submitAction()">登録する</button>
+        </div>
+        <!-- Score Information -->
+        <h2>アイディア情報</h2>
+        <div class="row">
+          <div class="span6">
+            <table class="table table-striped table-bordered table-condensed">
+              <thead>
+                <tr>
+                  <th id="home_name_label3" colspan="4">日本システム</th>
+                </tr>
+                <tr>
+                  <th>前半/後半</th>
+                  <th>分</th>
+                  <th>社員名</th>
+                  <th>アイディア種別</th>
+                </tr>
+              </thead>
+              <tbody id="point_info_list_home">
+				<!--
+				Input HTML
+				-->
+              </tbody>
+            </table>
+          </div>
+          <!-- span6 -->
+          <div class="span6">
+            <table class="table table-striped table-bordered table-condensed">
+              <thead>
+                <tr>
+                  <th id="away_name_label3" colspan="4">東京システム</th>
+                </tr>
+                <tr>
+                  <th>前半/後半</th>
+                  <th>分</th>
+                  <th>社員名</th>
+                  <th>アイディア種別</th>
+                </tr>
+              </thead>
+              <tbody id="point_info_list_away">
+				<!--
+				Input HTML
+				-->
+              </tbody>
+            </table>
+          </div>
+          <!-- span6 -->
+        </div>
+        <!-- row -->
+        <div class="form-actions">
+          <button class="btn btn-large btn-primary" type="button" onclick="addAction2()">追加する</button>
+          <button class="btn btn-large btn-primary" type="button" onclick="submitAction()">登録する</button>
+        </div>
+        <!-- Caution -->
+        <h2>違反者報告</h2>
+        <div class="row">
+          <div class="span6">
+            <table class="table table-striped table-bordered table-condensed">
+              <thead>
+                <tr>
+                  <th id="home_name_label4" colspan="5">日本システム</th>
+                </tr>
+                <tr>
+                  <th>前半/後半</th>
+                  <th>分</th>
+                  <th>社員名</th>
+                  <th>報告種別</th>
+                </tr>
+              </thead>
+              <tbody id="game_alert_list_home">
+				<!--
+				Input HTML
+				-->
+              </tbody>
+            </table>
+          </div>
+          <!-- span6 -->
+          <div class="span6">
+            <table class="table table-striped table-bordered table-condensed">
+              <thead>
+                <tr>
+                  <th id="away_name_label4" colspan="5">東京システム</th>
+                </tr>
+                <tr>
+                  <th>前半/後半</th>
+                  <th>分</th>
+                  <th>社員名</th>
+                  <th>報告種別</th>
+                </tr>
+              </thead>
+              <tbody id="game_alert_list_away">
+				<!--
+				Input HTML
+				-->
+              </tbody>
+            </table>
+          </div>
+          <!-- span6 -->
+        </div>
+        <!-- row -->
+        <div class="form-actions">
+          <button class="btn btn-large btn-primary" type="button" onclick="addAction3()">追加する</button>
+          <button class="btn btn-large btn-primary" type="button" onclick="submitAction()">登録する</button>
+        </div>
+        <footer></footer>
+        <p>Copyright &copy; Hoge.Inc All rights reserved.</p>
+      </form>
+    </div>
+    <!-- container -->
+    <script src="js/vendor/bootstrap.min.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

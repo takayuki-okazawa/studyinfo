@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<style>
+    body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+    }
+    .table th, .table td {
+        text-align: center;
+    }
+    select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {margin-bottom: 0;}
+    .form-actions {text-align: center;}
+</style>
+<link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="css/main.css">
+
+<script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+</head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="#">勉強会</a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav">
+                            <li class="active"><a href="gamelist.html">一覧</a></li>
+                            <li class="active"><a href="muchinput.html">勉強会情報</a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">日程入力<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="schedule.html">スケジュール</a></li>
+                                    <li><a href="reserve_list.html">会社名簿</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><!--/.nav-collapse -->
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+
+	    <h2>社員登録</h2>
+
+	    <!-- Score Information -->
+	    <div class="row">
+	    	<div class="span4">
+	    		<form>
+		    		<!-- Country-Code input-->
+		    		<div class="control-group">
+		    			<label class="control-label">会社コード</label>
+		    		    <input id="full-name" name="full-name" type="text" placeholder="COM-001">
+		    		</div>
+		    		<div class="control-group">
+		    		<!-- Country-name input-->
+		    			<label class="control-label">会社名称</label>
+		    		    <input id="address-line1" name="address-line1" type="text" placeholder="日本システム">
+		    		</div>
+	    		</form>
+	    	</div>
+
+	    	<div class="span8">
+	    		<table class="table table-striped table-bordered table-condensed">
+	    		    <thead>
+	    		        <tr><th colspan="4">会社</th></tr>
+	    		        <tr><th>役割</th><th>社員名</th><th>参加/不参加</th></tr>
+	    		    </thead>
+	    		    <tbody>
+	    		    	<tr>
+	    		    		<td class="span1"><div class="controls"><select id="select01" class="span2"><option>SE</option><option>PG</option><option>PM</option><option>PL</option></select></div></td>
+	    			    	<td><input type="text" class="input-block-level" value=""></td>
+	    			    	<td><input type="text" class="input-block-level" value=""></td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td class="span1"><div class="controls"><select id="select01" class="span2"><option>SE</option><option>PG</option><option>PM</option><option>PL</option></select></div></td>
+	    			    	<td><input type="text" class="input-block-level" value=""></td>
+	    			    	<td><input type="text" class="input-block-level" value=""></td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td class="span1"><div class="controls"><select id="select01" class="span2"><option>SE</option><option>PG</option><option>PM</option><option>PL</option></select></div></td>
+	    			    	<td><input type="text" class="input-block-level" value=""></td>
+	    			    	<td><input type="text" class="input-block-level" value=""></td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td class="span1"><div class="controls"><select id="select01" class="span2"><option>SE</option><option>PG</option><option>PM</option><option>PL</option></select></div></td>
+	    			    	<td><input type="text" class="input-block-level" value=""></td>
+	    			    	<td><input type="text" class="input-block-level" value=""></td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td class="span1"><div class="controls"><select id="select01" class="span2"><option>SE</option><option>PG</option><option>PM</option><option>PL</option></select></div></td>
+	    			    	<td><input type="text" class="input-block-level" value=""></td>
+	    			    	<td><input type="text" class="input-block-level" value=""></td>
+	    		    	</tr>
+	    		    	<tr>
+	    		    		<td class="span1"><div class="controls"><select id="select01" class="span2"><option>SE</option><option>PG</option><option>PM</option><option>PL</option></select></div></td>
+	    			    	<td><input type="text" class="input-block-level" value=""></td>
+	    			    	<td><input type="text" class="input-block-level" value=""></td>
+	    		    	</tr>
+	    		    </tbody>
+	    		</table>
+	    	</div>
+
+	    </div>
+	    <div class="form-actions"><button class="btn btn-large btn-primary" type="submit">登録する</button></div>
+
+	    <footer>
+	        <p>Copyright &copy; Hoge.Inc All rights reserved.</p>
+	    </footer>
+
+        </div> <!-- /container -->
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+
+        <script src="js/vendor/bootstrap.min.js"></script>
+
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>

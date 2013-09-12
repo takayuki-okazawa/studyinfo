@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<style>
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+.table th, .table td {
+  text-align: center;
+}
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {margin-bottom: 0;}
+.form-actions {text-align: center;}
+</style>
+<link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="css/main.css">
+
+<script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script src="js/jquery-1.9.1.min.js"></script>
+<script src="js/main.js"></script>
+    <script>
+        $(function(){
+            $.get(
+              getHost()+"?api=004&id=all",
+              function(data){
+              	var innerStr ="";
+              	for(var key in data){
+                	innerStr +=
+                	"<tr>"+
+                		"<td class='6'>"+
+							"<a href='schedule.html?api=004&id="+data[key].id+"'>"
+								+data[key].name+
+							"</a>"+
+                		"</td>"+
+                		"<td class='2'>"+
+
+                        "<a href='starting_lineup.html?"+
+                            "id="+data[key].id+
+                            "&name="+data[key].name+
+                            "&home_id="+data[key].home_id+
+                            "&away_id="+data[key].away_id+
+                            "&home_name="+data[key].home_name+
+                            "&away_name="+data[key].away_name+
+                            "'>参加者入力</a></td>"+
+						"<td class='2'>"+
+                        "<a href='muchinput.html?"+
+                            "id="+data[key].id +
+                            "&name="+data[key].name+
+                            "&home_name="+data[key].home_name+
+                            "&away_name="+data[key].away_name+
+                            "&home_name="+data[key].home_name+
+                            "&away_name="+data[key].away_name+
+                        "'>勉強会経過入力</a>"+
+                        "</td>"+
+					"</tr>";
+              	}
+              	document.getElementById("listObj").innerHTML=innerStr;
+              }
+            );
+        });
+    </script>
+</head>
+<body>
+<!--[if lt IE 7]>
+  <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+<![endif]-->
+<!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="#">勉強会</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active"><a href="index.html">一覧</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">日程入力<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="schedule.html">スケジュール</a></li>
+                            <li><a href="reserve.html">社員名簿</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!-- container -->
+    </div><!-- navbar-inner -->
+</div><!-- navbar navbar-inverse navbar-fixed-to -->
+
+<div class="container">
+    <!-- Game&Comment&Commentary -->
+    <h2>勉強会一覧</h2>
+    <div class="row">
+        <div class="span12">
+            <table class="table table-striped table-bordered table-condensed">
+                <thead>
+                    <tr><th>スケジュール</th><th>参加者リスト</th><th>勉強会情報</th></tr>
+                </thead>
+                <tbody id="listObj">
+                <!--
+                    Input HTML
+                -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <p>Copyright &copy; Hoge.inc All rights reserved.</p>
+    </footer>
+
+</div><!-- container -->
+
+<!--
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+-->
+<script src="js/vendor/bootstrap.min.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

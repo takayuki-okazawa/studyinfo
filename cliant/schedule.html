@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<style>
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+.table th, .table td {
+  text-align: center;
+}
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {margin-bottom: 0;}
+.form-actions {text-align: center;}
+</style>
+<link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="css/main.css">
+
+
+<script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+<script src="js/jquery-1.9.1.min.js"></script>
+<script src="js/main.js"></script>
+<script>
+var gameId = null;
+
+  $(function(){
+
+    gameId = null;
+
+    if(null != location.search.substring(1) && "" != location.search.substring(1)){
+      gameId = decodeURI(location.search.substring(1).split('&')[1].split('=')[1]);
+
+      $.get(
+        getHost()+"?api=004&id="+gameId,
+
+        function(data){
+            $(code).val(data[0].code);
+            $(flag).val(data[0].flag);
+            $(name1).val(data[0].name);
+            $(gameId).val(gameId);
+            $(date_start_jp).val(data[0].date_start_jp);
+            $(date_start_local).val(data[0].date_start_local);
+            $(home_id).val(data[0].home_id);
+            $(away_id).val(data[0].away_id);
+            $(home_name).val(data[0].home_name);
+            $(away_name).val(data[0].away_name);
+            $(stadium_name).val(data[0].stadium_name);
+        }
+       );
+     }
+  });
+
+  function submitAction(){
+
+  if ("" == $(name1).val()) {
+    alert("大会名１は必須です")
+    return;
+  };
+/*
+  if ("" == $(name2).val()) {
+    alert("大会名２は必須です")
+    return;
+  };
+*/
+  if ("" == $(date_start_jp).val()) {
+    alert("日本開始時間は必須です")
+    return;
+  };
+  if ("" == $(date_start_local).val()) {
+    alert("現地開始時間は必須です")
+    return;
+  };
+  if ("" == $(home_id).val()) {
+    alert("ホームIDは必須です")
+    return;
+  };
+  if ("" == $(away_id).val()) {
+    alert("アウェイIDは必須です")
+    return;
+  };
+  if ("" == $(home_name).val()) {
+    alert("ホーム名は必須です")
+    return;
+  };
+  if ("" == $(away_name).val()) {
+    alert("アウェイ名は必須です")
+    return;
+  };
+  if ("" == $(stadium_name).val()) {
+    alert("スタジアム名は必須です")
+    return;
+  };
+
+  if(gameId==null){
+    gameId = String($(code).val()+$(date_start_jp).val());
+  }
+
+alert(gameId);
+
+  $.ajax({
+    url:getHost(),
+    dataType:"json",
+    data:{
+	  "api": "004",
+	  "code": $(code).val(),
+      "flag": $(flag).val(),
+	  "name": $(name1).val()+$(name2).val(),
+	  "id": gameId,
+	  "date_start_jp": $(date_start_jp).val(),
+	  "date_start_local": $(date_start_local).val(),
+	  "home_id": $(home_id).val(),
+	  "away_id": $(away_id).val(),
+	  "home_name": $(home_name).val(),
+	  "away_name": $(away_name).val(),
+	  "stadium_name": $(stadium_name).val()
+    },
+    type:"POST",
+    success:function(data){
+    },
+    error:function(data){
+      if(200==data.status){
+        alert("データ登録が完了しました");
+      }else{
+        alert("データ登録が失敗しました");
+      }
+    }
+  });
+
+
+  }
+
+  function deleteAction(){
+
+  if(gameId==null){
+    gameId = String($(code).val()+$(date_start_jp).val());
+  }
+
+  $.ajax({
+    url:getHost(),
+    dataType:"json",
+    data:{
+	  "api": "004",
+	  "code": $(code).val(),
+      "flag": $(flag).val(),
+	  "name": $(name1).val()+$(name2).val(),
+	  "id": gameId,
+	  "date_start_jp": $(date_start_jp).val(),
+	  "date_start_local": $(date_start_local).val(),
+	  "home_id": $(home_id).val(),
+	  "away_id": $(away_id).val(),
+	  "home_name": $(home_name).val(),
+	  "away_name": $(away_name).val(),
+	  "stadium_name": $(stadium_name).val(),
+      "delete":"true"
+    },
+    type:"POST",
+    success:function(data){
+    },
+    error:function(data){
+      if(200==data.status){
+        alert("データ削除が完了しました");
+      }else{
+        alert("データ削除が失敗しました");
+      }
+    }
+  });
+
+
+  }
+</script>
+</head>
+<body>
+<!--[if lt IE 7]>
+  <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+<![endif]-->
+<!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="#">勉強会</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active"><a href="index.html">一覧</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">日程入力<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="schedule.html">スケジュール</a></li>
+                            <li><a href="reserve.html">会社名簿</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!-- container -->
+    </div><!-- navbar-inner -->
+</div><!-- navbar navbar-inverse navbar-fixed-to -->
+
+<div class="container">
+
+    <h2>スケジュール</h2>
+    <div class="row">
+        <div class="span12">
+            <form class="form-horizontal">
+               <fieldset>
+                   <!-- Tounament code input-->
+                   <div class="control-group">
+                       <label class="control-label">勉強会コード</label>
+                       <div class="controls">
+                           <input id="code" name="code" type="text" placeholder="001" class="input-mini">
+                           <p class="help-block">識別コード</p>
+                       </div>
+                   </div>
+                   <!-- Tounament flag input-->
+                   <div class="control-group">
+                       <label class="control-label">区分（１桁）</label>
+                       <div class="controls">
+                           <input id="flag" name="flag" type="text" placeholder="001" class="input-mini">
+                       </div>
+                   </div>
+                   <!-- Tounament name input-->
+                   <div class="control-group">
+                       <label class="control-label">勉強会名１</label>
+                       <div class="controls">
+                           <input id="name1" name="name1" type="text" placeholder="Java8勉強会" class="input-xlarge">
+                       </div>
+                   </div>
+                   <!-- Tounament name input-->
+                   <div class="control-group">
+                       <label class="control-label">勉強会名２</label>
+                       <div class="controls">
+                           <input id="name2" name="name2" type="text" placeholder="第一章" class="input-xlarge">
+                       </div>
+                   </div>
+                   <!-- JST input-->
+                   <div class="control-group">
+                       <label class="control-label">開始時間</label>
+                       <div class="controls">
+                           <input id="date_start_jp" name="date_start_jp" type="text" placeholder="20130326230000" class="input-medium">
+                           <p class="help-block">年月日時分秒（１４桁)</p>
+                       </div>
+                   </div>
+                   <!-- Local time input-->
+                   <div class="control-group">
+                       <label class="control-label">終了時間</label>
+                       <div class="controls">
+                           <input id="date_start_local" name="date_start_local" type="text" placeholder="20130326230000" class="input-medium">
+                           <p class="help-block">年月日時分秒（１４桁）</p>
+                       </div>
+                   </div>
+                   <!-- Home Country Code input-->
+                   <div class="control-group">
+                       <label class="control-label">担当会社コード</label>
+                       <div class="controls">
+                           <input id="home_id" name="home_id" type="text" placeholder="CP-123" class="input-mini">
+                       </div>
+                   </div>
+                    <!-- Home Team Name input-->
+                   <div class="control-group">
+                       <label class="control-label">担当者名</label>
+                       <div class="controls">
+                           <input id="home_name" name="home_name" type="text" placeholder="佐藤太郎" class="input-xlarge">
+                           <p class="help-block"></p>
+                       </div>
+                   </div>
+                   <!-- Away Country Code input-->
+                   <div class="control-group">
+                       <label class="control-label">サポート会社コード</label>
+                       <div class="controls">
+                           <input id="away_id" name="away_id" type="text" placeholder="CP-123" class="input-mini">
+                       </div>
+                   </div>
+                   <!-- Away Team Name input-->
+                   <div class="control-group">
+                       <label class="control-label">サポート者名</label>
+                       <div class="controls">
+                           <input id="away_name" name="away_name" type="text" placeholder="佐藤太郎" class="input-xlarge">
+                           <p class="help-block"></p>
+                       </div>
+                   </div>
+                   <!-- Stadium input-->
+                   <div class="control-group">
+                       <label class="control-label">開催場所</label>
+                       <div class="controls">
+                           <input id="stadium_name" name="stadium_name" type="text" placeholder="六本木ヒルズ" class="input-xlarge">
+                       </div>
+                   </div>
+               </fieldset>
+            </form>
+        </div><!--  span12 -->
+    </div><!--  row -->
+    <div class="form-actions">
+<button class="btn btn-large btn-primary" type="button" onclick="submitAction()">登録する</button>
+<button class="btn btn-large btn-primary" type="button" onclick="deleteAction()">削除する</button>
+
+</div><!-- container -->
+
+    <footer>
+        <p>Copyright &copy; Hoge.Inc All rights reserved.</p>
+    </footer>
+    
+<!--
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+-->
+<script src="js/vendor/bootstrap.min.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

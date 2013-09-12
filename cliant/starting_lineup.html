@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<title></title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width">
+
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<style>
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+.table th, .table td {
+  text-align: center;
+}
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {margin-bottom: 0;}
+.form-actions {text-align: center;}
+</style>
+<link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+<link rel="stylesheet" href="css/main.css">
+
+<script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+
+
+<script src="js/main.js"></script>
+<script src="js/jquery-1.9.1.min.js"></script>
+<script>
+
+  var home_count;
+  var away_count;
+  var home_id;
+  var away_id;
+  var gameId;
+  var isSelect = function(obj,value){if(obj==value){return "selected"};};
+
+  $(function(){
+
+    //Set URL Parameter
+    gameId = decodeURI(location.search.substring(1).split('&')[0].split('=')[1]);
+    var name = decodeURI(location.search.substring(1).split('&')[1].split('=')[1]);
+    home_id = decodeURI(location.search.substring(1).split('&')[2].split('=')[1]);
+    away_id = decodeURI(location.search.substring(1).split('&')[3].split('=')[1]);
+    var home_name = decodeURI(location.search.substring(1).split('&')[4].split('=')[1]);
+    var away_name = decodeURI(location.search.substring(1).split('&')[5].split('=')[1]);
+    document.getElementById('title').innerHTML = "<h3>"+name+"</h3>";
+    document.getElementById('home_name').innerHTML = home_name;
+    document.getElementById('away_name').innerHTML = away_name;
+
+    //Get Starting Member info
+    $.ajax({
+        type:'GET',
+        url:getHost(),
+        data:{
+            api:"001",
+            id:gameId
+        },
+        datatype:"json",
+        success:function(data){
+
+            var name = data[0].name;
+            var home_position = data[0].home_position;
+            var home_name = data[0].home_name;
+            var home_status = data[0].home_status;
+            var away_position = data[0].away_position;
+            var away_name = data[0].away_name;
+            var away_status = data[0].away_status;
+
+            document.getElementById("home").innerHTML = "";
+
+            if(null!=home_name){
+            for (var i=0; i< home_name.length; i++) {
+
+                var str = 
+                "<tr id='"+"list"+i+"'>"+
+                "<td class='span1'>"+
+                "<div class='controls'>"+
+                "<select id='home_position"+i+"' name='home_position"+i+"' class='span2'>"+
+                  "<option value='1' "+isSelect(home_position[i],1)+">GK</option>"+
+                  "<option value='2' "+isSelect(home_position[i],2)+">DF</option>"+
+                  "<option value='3' "+isSelect(home_position[i],3)+">MF</option>"+
+                  "<option value='4' "+isSelect(home_position[i],4)+">FW</option>"+
+                "</select>"+
+                "</div>"+
+                "</td>"+
+ 
+               "<td><input type='text' id='home_name"+i+"' name='home_name"+i+"' class='input-block-level' value='"+home_name[i]+"'></td>"+
+
+                "<td><div class='controls'>"+
+                "<select id='home_status"+i+"' name='home_status"+i+"' class='span2'>"+
+                  "<option value='1' "+isSelect(home_status[i],1)+">不参加</option>"+
+                  "<option value='2' "+isSelect(home_status[i],2)+">参加</option>"+
+                "</select></div></td></tr>";
+
+                document.getElementById("home").innerHTML += str;
+                home_count = i;
+            }
+            }
+
+            document.getElementById("away").innerHTML = "";
+
+            if(null!=home_name){
+            for (var i=0; i< away_name.length; i++) {
+
+                var str = 
+                "<tr id='"+"list"+i+"'>"+
+                "<td class='span1'>"+
+                "<div class='controls'>"+
+                "<select id='away_position' name='away_position' class='span2'>"+
+                "<option value='1' "+isSelect(away_position[i],1)+">GK</option>"+
+                "<option value='2' "+isSelect(away_position[i],2)+">DF</option>"+
+                "<option value='3' "+isSelect(away_position[i],3)+">MF</option>"+
+                "<option value='4' "+isSelect(away_position[i],4)+">FW</option>"+
+                "</select>"+
+                "</div>"+
+                "</td>"+
+                "<td><input type='text' id='away_name"+i+"' name='away_name"+i+"' class='input-block-level' value='"+away_name[i]+"'></td>"+
+
+                "<td><div class='controls'>"+
+                "<select id='away_status"+i+"' name='away_status"+i+"' class='span2'>"+
+                  "<option value='1' "+isSelect(away_status[i],1)+">不参加</option>"+
+                  "<option value='2' "+isSelect(away_status[i],2)+">参加</option>"+
+                "</select></div></td></tr>";
+
+                document.getElementById("away").innerHTML += str;
+                away_count = i;
+            }
+            }
+        }
+    });
+
+
+  });
+
+
+  function getTeamAction(){
+
+    $.ajax({
+        type:'GET',
+        url:getHost(),
+        data:{
+            api:"005",
+            id:home_id
+        },
+        datatype:"json",
+        success:function(data){
+
+            if("" == data){
+                alert("会社情報がありません。社員登録画面から情報を登録してください");
+                return;
+            }
+
+            var name = data[0].name;
+            var position = data[0].position;
+            var belonging = data[0].belonging;
+            var isSelect = function(obj,value){if(obj==value){return "selected"};};
+
+            document.getElementById("home").innerHTML = "";
+
+            home_count = 0;
+
+
+            for (var i=0; i< name.length; i++) {
+
+                var str = 
+                "<tr id='"+"list"+i+"'>"+
+                "<td class='span1'>"+
+                "<div class='controls'>"+
+                "<select id='home_position"+i+"' name='home_position"+i+"' class='span2'>"+
+                  "<option value='1' "+isSelect(position[i],1)+">GK</option>"+
+                  "<option value='2' "+isSelect(position[i],2)+">DF</option>"+
+                  "<option value='3' "+isSelect(position[i],3)+">MF</option>"+
+                  "<option value='4' "+isSelect(position[i],4)+">FW</option>"+
+                "</select>"+
+                "</div>"+
+                "</td>"+
+ 
+               "<td><input type='text' id='home_name"+i+"' name='home_name"+i+"' class='input-block-level' value='"+name[i]+"'></td>"+
+
+                "<td><div class='controls'>"+
+                "<select id='home_status"+i+"' name='home_status"+i+"' class='span2'>"+
+                  "<option value='1'>不参加</option>"+
+                  "<option value='2'>参加</option>"+
+                "</select></div></td></tr>";
+
+                document.getElementById("home").innerHTML += str;
+                ++home_count;
+            }
+        }
+    });
+
+    //AWAY
+    $.ajax({
+        type:'GET',
+        url:getHost(),
+        data:{
+            api:"005",
+            id:away_id
+        },
+        datatype:"json",
+        success:function(data){
+
+            if("" == data){
+                alert("会社情報がありません。会社登録画面から情報を登録してください");
+                return;
+            }
+
+            var name = data[0].name;
+            var position = data[0].position;
+            var belonging = data[0].belonging;
+            var isSelect = function(obj,value){if(obj==value){return "selected"};};
+
+            document.getElementById("away").innerHTML = "";
+
+            away_count = 0;
+            for (var i=0; i< name.length; i++) {
+
+                var str = 
+                "<tr id='"+"list"+i+"'>"+
+                "<td class='span1'>"+
+                "<div class='controls'>"+
+                "<select id='away_position"+i+"' name='away_position"+i+"' class='span2'>"+
+                "<option value='1' "+isSelect(position[i],1)+">GK</option>"+
+                "<option value='2' "+isSelect(position[i],2)+">DF</option>"+
+                "<option value='3' "+isSelect(position[i],3)+">MF</option>"+
+                "<option value='4' "+isSelect(position[i],4)+">FW</option>"+
+                "</select>"+
+                "</div>"+
+                "</td>"+
+                "<td><input type='text' id='away_name"+i+"' name='away_name"+i+"' class='input-block-level' value='"+name[i]+"'></td>"+
+
+                "<td><div class='controls'>"+
+                "<select id='away_status"+i+"' class='span2'>"+
+                "<option value='1'不参加</option>"+
+                "<option value='2'>参加</option>"+
+                "</select></div></td></tr>";
+
+                document.getElementById("away").innerHTML += str;
+                ++away_count;
+            }
+        }
+    });
+
+  }
+
+  function submitAction(){
+
+    var home_position = new Array();
+    var home_name = new Array();
+    var home_status = new Array();
+
+    var away_position = new Array();
+    var away_name = new Array();
+    var away_status = new Array();
+
+    for(var i = 0; i < home_count; i++){
+      home_position.push($("#home_position"+i).val());
+      home_name.push($("#home_name"+i).val());
+      home_status.push($("#home_status"+i).val());
+    }
+
+    for(var i = 0; i < away_count; i++){
+      away_position.push($("#away_position"+i).val());
+      away_name.push($("#away_name"+i).val());
+      away_status.push($("#away_status"+i).val());
+    }
+
+    $.ajax({
+      url:getHost(),
+    dataType:"json",
+    data:{
+	  "api": "001",
+	  "id": gameId,
+      "home_position":home_position,
+      "home_name":home_name,
+      "home_status":home_status,
+      "away_position":away_position,
+      "away_name":away_name,
+      "away_status":away_status
+    },
+    type:"POST",
+    success:function(data){
+    },
+    error:function(data){
+      if(200==data.status){
+        alert("データ登録が完了しました");
+      }else{
+        alert("データ登録が失敗しました");
+      }
+    }
+  });
+
+  }
+</script>
+</head>
+<body>
+<!--[if lt IE 7]>
+  <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+<![endif]-->
+<!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="#">勉強会</a>
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active"><a href="index.html">一覧</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">日程入力<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="schedule.html">スケジュール</a></li>
+                            <li><a href="reserve.html">会社名簿</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!-- container -->
+    </div><!-- navbar-inner -->
+</div><!-- navbar navbar-inverse navbar-fixed-to -->
+
+<div class="container">
+
+
+    <h2>参加メンバー入力</h2>
+    <div id="title"></div>
+
+    <!-- Score Information -->
+    <div class="row">
+        <form>
+            <div class="span6">
+                <table class="table table-striped table-bordered table-condensed">
+
+                    <thead>
+                        <tr><th colspan="4" id="home_name"></th></tr>
+                        <tr><th>会社名</th><th>社員名</th><th>参加/不参加</th></tr>
+                    </thead>
+
+                    <tbody id="home">
+
+					<!--
+					Input HTML
+					-->
+					
+                    </tbody>
+                    
+                </table>
+            </div><!-- span6 -->
+
+            <div class="span6">
+                <table class="table table-striped table-bordered table-condensed">
+
+                 <thead>
+                        <tr><th colspan="4" id="away_name"></th></tr>
+                        <tr><th>会社名</th><th>社員名</th><th>参加/不参加</th></tr>
+                    </thead>
+
+                    <tbody id="away">
+					<!--
+					Input HTML
+					-->
+                    </tbody>
+                </table>
+            </div><!-- span6 -->
+        </form>
+    </div><!-- row -->
+    <div class="form-actions">
+        <button class="btn btn-large btn-primary" type="submit" onclick="getTeamAction()">会社情報を取得する</button>
+        <button class="btn btn-large btn-primary" type="submit" onclick="submitAction()">登録する</button>
+    </div>
+    
+    <footer>
+        <p>Copyright &copy; Hoge.Inc All rights reserved.</p>
+    </footer>
+
+</div><!-- container -->
+<!--
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.9.1.min.js"><\/script>')</script>
+-->
+<script src="js/vendor/bootstrap.min.js"></script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
